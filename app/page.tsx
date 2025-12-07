@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
   const runtimeMessage = process.env.APP_RUNTIME_MESSAGE || "Sin mensaje de runtime";
 
