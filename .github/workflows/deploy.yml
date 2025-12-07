@@ -84,34 +84,6 @@ jobs:
             # Pull de la última imagen
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-            # Configurar Nginx si no existe
-            if [ ! -f /etc/nginx/sites-available/prueba-tecnica ]; then
-              sudo bash -c 'cat << "EOF" > /etc/nginx/sites-available/prueba-tecnica
-server {
-    listen 80;
-    server_name _;
-
-    location /prueba-tecnica {
-        proxy_pass http://127.0.0.1:3000/prueba-tecnica;
-
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-
-        add_header X-Frame-Options "DENY";
-        add_header X-Content-Type-Options "nosniff";
-        add_header Referrer-Policy "no-referrer";
-    }
-}
-EOF'
-              sudo rm -f /etc/nginx/sites-enabled/default || true
-              sudo ln -s /etc/nginx/sites-available/prueba-tecnica /etc/nginx/sites-enabled/prueba-tecnica
-              sudo nginx -t
-              sudo systemctl reload nginx
-            fi
-
             # Parar contenedor anterior si existe
             if sudo docker ps -a --format '{{.Names}}' | grep -Eq "^prueba-tecnica$"; then
               sudo docker stop prueba-tecnica || true
