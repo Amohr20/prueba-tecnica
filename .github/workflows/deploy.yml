@@ -12,6 +12,7 @@ env:
   IMAGE_TAG: latest
 
 jobs:
+
   build-and-push:
     runs-on: ubuntu-latest
 
@@ -57,6 +58,7 @@ jobs:
           name: trivy-report
           path: trivy-report.txt
 
+
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -75,13 +77,16 @@ jobs:
             ECR_REPOSITORY="${{ env.ECR_REPOSITORY }}"
             AWS_REGION="${{ env.AWS_REGION }}"
 
+            # Login a ECR en la EC2
             aws ecr get-login-password --region $AWS_REGION \
               | sudo docker login --username AWS --password-stdin $ECR_REGISTRY
 
+            # Pull de la última imagen
             sudo docker pull $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
+            # Configurar Nginx si no existe
             if [ ! -f /etc/nginx/sites-available/prueba-tecnica ]; then
-              sudo bash -c 'cat > /etc/nginx/sites-available/prueba-tecnica << "EOF"
+              sudo bash -c 'cat << "EOF" > /etc/nginx/sites-available/prueba-tecnica
 server {
     listen 80;
     server_name _;
@@ -107,11 +112,13 @@ EOF'
               sudo systemctl reload nginx
             fi
 
+            # Parar contenedor anterior si existe
             if sudo docker ps -a --format '{{.Names}}' | grep -Eq "^prueba-tecnica$"; then
               sudo docker stop prueba-tecnica || true
               sudo docker rm prueba-tecnica || true
             fi
 
+            # Correr contenedor nuevo
             sudo docker run -d --name prueba-tecnica \
               -p 3000:3007 \
               -e APP_RUNTIME_MESSAGE="Desplegado desde CI/CD" \
