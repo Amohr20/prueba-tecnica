@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## README – Prueba Técnica – Ingeniero de Infraestructura
+Descripción
+Este README contiene la documentación del proyecto requerido en la Prueba Técnica para Ingeniero de Infraestructura. Incluye Next.js SSR, Docker, Terraform, AWS EC2/ECR, Nginx y CI/CD.
 
-## Getting Started
 
-First, run the development server:
+## Tecnologías Principales
+• Next.js SSR con basePath /prueba-tecnica
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+• Docker multistage
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+• AWS EC2 y ECR
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+• Terraform (IaC)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+• GitHub Actions (CI/CD)
 
-## Learn More
+• Nginx Reverse Proxy
 
-To learn more about Next.js, take a look at the following resources:
+• Trivy (Escaneo de vulnerabilidades)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Estructura del Repositorio
+/app – Código Next.js
 
-## Deploy on Vercel
+Dockerfile – Contenedor multistage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+next.config.ts – Configuración SSR
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+.github/workflows/deploy.yml – Pipeline CI/CD
+
+/infra – Terraform + nginx.conf + trivy-report.txt
+
+
+## URL Pública
+HTTP: http://44.213.82.171/prueba-tecnica
+
+HTTPS: https://44.213.82.171/prueba-tecnica (certificado self‑signed)
+
+
+## Instrucciones Básicas
+docker build -t prueba-tecnica .
+
+docker run -p 3000:3007 prueba-tecnica
+
+npm install && npm run build && npm start
